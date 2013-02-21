@@ -1,0 +1,171 @@
+
+
+This is short instructions for work with git and github
+---------------------------------------------------------
+
+Прежде всего, нам необходимо установить сам Git. Нет ничего проще:
+
+1. $ apt-get install git-core
+
+После ввода пароля, git будет установлен в систему. В принципе, пару следующих шагов делать не обязательно, но всё должно быть не только работоспособно, но ещё и красиво. Делаем следующее:
+
+2. Указываем владельца репозитария:
+
+$ git config —global user.name «Name or Nickname»
+
+3. Задаём почтовый адрес:
+
+$ git config —global user.email youremail@example.com
+
+Как видите, указывается опция «—global» (если вдруг WordPress опять «съест», то там два дефиса), которая задаёт общие настройки для git в системе. Один раз указали и этого будет достаточно.
+
+С настройками покончено. Приступаем к работе. Для начала перейдём в директорию, в которой хотим создать репозитарий, и который, в будущем, будет загружен на Github.
+
+4. $ cd ~/rails/test_app/
+
+Теперь необходимо инициализировать новый репозитарий. Эта процедура делается один раз в самом начале работы. Опять же, всё очень просто:
+
+5. $ git init
+
+Initialized empty Git repository in /home/<username>/rails/mysql_app/.git/
+
+Как видно из надписи, создан пока ещё пустой репозитарий в директории нашего приложения. Там создалась скрытая директория .git.
+
+Теперь необходимо добавить файлы в наш вновь созданный репозитарий:
+
+6. git add .
+
+Обращаю Ваше внимание, что эта точка «.» указывает, что надо добавить все файлы и директории из текущего каталога. Естественно, рекурсивно будут добавлены все файлы из директорий. Обращаю Ваше внимание, что «рельсы» сами создают скрытый файл .gitignore, в котором хранится информация о том, какие файлы и каталоги не надо сохранять в репозитарии, т.к. они не несут необходимой информации, а так же слишком часто обновляются. Вы сами можете вносить туда изменения на Ваше усмотрение.
+
+Посмотреть же, что git собирается сделать  можно в любой момент командой:
+
+7. $ git status
+
+Теперь мы должны сказать git, что готовы к сохранению изменений:
+
+8. $ git commit -m «Initial commit»
+
+Все изменённые файлы будут добавлены в репозитарий. Дальше вы можете с ними работать, но своеобразная точка восстановления, названная »Initial commit», у нас есть. Всегда можем к ней вернуться.
+
+Увидеть все проведённые нами изменения с репозитарием можно следующей командой:
+
+9. git log
+
+Увидите что-то типа этого:
+commit fb6b6349b17fd428a68d6c18a8a5501af6f677a4
+Author: http://www.none.com.ua/
+Date:   Fri May 13 17:41:55 2011 +0300
+Initial commit
+
+Так как у нас всего одно добавление, то и запись всего одна (-:
+
+В принципе, основная работа с git закончена. Теперь попробуем добавить наш копию нашего репозитария на Github. Создание аккаунта и репозитария на Github я оставляю на самостоятельное изучение, там ничего сложного, всё просто и понятно. Я же расскажу про те трудности, которые могут возникнуть, а у меня возникли (-:, при подключении ssh-ключей и загрузке репозитария на Github.
+
+После того, как Вы создадите репозитарий на Github, то вам там тактично намекнут, что-то необходимо бы как-то ssh-ключик подкинуть для красоты и работоспособности. Вот этим и займёмся.
+
+Для начала:
+
+10.  $ cd ~/.ssh
+
+bash: cd: /home/user/.ssh: Нет такого файла или каталога
+
+Если увидели то же самое, то у Вас нет ещё ключей и их надо создать. Давайте создадим:
+
+11. $ ssh-keygen -t rsa -C «youremail@mail.com»
+Generating public/private rsa key pair.
+
+Enter file in which to save the key (/home/user/.ssh/id_rsa): <Press Enter>
+
+Created directory ‘/home/user/.ssh’.
+Enter passphrase (empty for no passphrase):
+
+Your public key has been saved in /home/user/.ssh/id_rsa.pub.
+
+The key fingerprint is:
+
+8a:ee:cb:94:bf:b4:15:64:bc:3c:7a:7b:fb:6f:39:0f youremail@mail.com
+
+The key’s randomart image is:
+
++—[ RSA 2048]—-+
+
+|                 |
+
+|       .         |
+
+|        +        |
+
+|       + .       |
+
+|        S        |
+
+|     o o o       |
+
+|    + + o     E. |
+
+|   + o + ..   +. |
+
+|   .=.+….o.o.o.|
+
++——————+
+
+Вместо «youremail@mail.com» напишите свой электронный адрес. Теперь у нас созданы ssh-ключи. Перейдём в директорию с ключами:
+
+12. $ cd ~/.ssh/
+
+13. $ cat ~/.ssh/id_rsa.pub
+
+Этой командой в окно терминала выводится содержимое публичного ключа. Не пугайтесь, всё в порядке, это так и должно быть. Скопируйте это и вставьте по адресу: https://github.com/account/ssh
+
+Там не сложно. Выберите добавление публичного ключа и вставьте скопированное. После этого Github будет готов к работе с нами. Попробуйте вот эту команду:
+
+14. $ ssh git@github.com
+
+The authenticity of host ‘github.com (207.97.227.239)’ can’t be established.
+
+RSA key fingerprint is 16:27:ac:a5:76:28:2d:36:63:1b:56:4d:eb:df:a6:48.
+
+Are you sure you want to continue connecting (yes/no)? yes
+
+Warning: Permanently added ‘github.com,207.97.227.239′ (RSA) to the list of known hosts.
+
+Agent admitted failure to sign using the key.
+
+Permission denied (publickey).
+
+Мне вот сразу не понравилось это «Permission denied», но я не обратил на это внимание. Как позже выяснилось — очень зря. Но продолжим. Скажем git, какой удалённый репозитарий использовать:
+
+15. $ git remote add origin git@github.com:<your account>/<your repository>.git
+
+Здесь вместо ﻿﻿»your account» и «your repository» указываете то, что сами создали на сайте github.com. После этого пытаемся загрузить наш локальный репозитарий на github:
+
+16. $ git push origin master
+
+Лично у меня выдало следующее:
+
+Agent admitted failure to sign using the key.
+Permission denied (publickey).
+fatal: The remote end hung up unexpectedly
+
+И ничего, понятно, не загрузилось на github. Поиск в интернете дал определённый результат. Как оказалось, если я правильно понял, это какой-то «баг» Ubuntu, но, к нашему счастью, это лечится. Делаем следующее:
+
+17. $ ssh-add ~/.ssh/id_rsa
+Enter passphrase for /home/user/.ssh/id_rsa:
+Identity added: /home/user/.ssh/id_rsa (/home/user/.ssh/id_rsa)
+
+Команда ssh-add — добавляет RSA- или DSA-идентификацию в аутентификационного агента. Иными словами, система теперь будет знать, с каким ключом работать. А теперь пробуем повторить процедуру из пункта 16:
+
+16. $ git push origin master
+Counting objects: 65, done.
+Delta compression using up to 2 threads.
+Compressing objects: 100% (50/50), done.
+Writing objects: 100% (65/65), 88.01 KiB, done.
+Total 65 (delta 2), reused 0 (delta 0)
+To git@github.com:<your account>/<your repository>.git
+* [new branch]      master -> master
+
+Теперь можете смело смотреть на github свой новосозданный репозитарий (-:
+
+Enter same passphrase again:
+
+Your identification has been saved in /home/user/.ssh/id_rsa.
